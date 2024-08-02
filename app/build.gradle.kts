@@ -93,6 +93,8 @@ dependencies {
 
     implementation(libs.androidx.core.splashscreen)
 
+    implementation(libs.lottie)
+
     // Timber
     implementation(libs.timber)
 }

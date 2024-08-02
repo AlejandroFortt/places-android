@@ -1,10 +1,20 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.Places" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+
+        <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:fontFamily">@font/product_sans_regular</item>
     </style>
 
     <style name="Theme.Places" parent="Base.Theme.Places" />
+
+    <style name="Theme.Launcher" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/white</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+        <item name="windowSplashScreenIconBackgroundColor">@color/white</item>
+        <item name="windowSplashScreenAnimationDuration">1500</item>
+        <item name="postSplashScreenTheme">@style/Theme.Places</item>
+    </style>
 </resources>
