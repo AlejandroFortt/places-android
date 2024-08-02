@@ -4,6 +4,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
@@ -25,13 +26,18 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     override fun onViewCreated() {
         viewPager2 = binding.placesPager
 
+        val homePlaceAdapter = HomePlaceAdapter { placeId ->
+            navigateToDetail(placeId)
+        }
+        viewPager2.adapter = homePlaceAdapter
+
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 homeViewModel.places.collect {
                     Timber.d("places from home: $it")
                     when(it) {
                         is Result.Success -> {
-                            viewPager2.adapter = HomePlaceAdapter(it.data)
+                            homePlaceAdapter.submitList(it.data)
                         }
                         else -> {
                             Timber.e("Error loading places")
@@ -61,6 +67,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         }
 
         viewPager2.setPageTransformer(pagerTransformer)
+    }
+
+    private fun navigateToDetail(placeId: String) {
+        val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment(placeId)
+        findNavController().navigate(action)
     }
 
 }
