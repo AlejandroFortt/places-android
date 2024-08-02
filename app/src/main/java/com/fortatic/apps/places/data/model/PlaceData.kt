@@ -18,7 +18,7 @@ data class Place(
     val activities: List<String>
 )
 
-private fun List<Place>.toHomePlace(): List<HomePlace> {
+fun List<Place>.toHomePlace(): List<HomePlace> {
     return map {
         HomePlace(
             id = it.id,

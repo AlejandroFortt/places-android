@@ -3,4 +3,10 @@
     <string name="retry">Reintentar</string>
     <string name="error_title">Algo ocurrió</string>
     <string name="error_message">Revisa tu conexión a internet y verifica que todo esté bien antes de continuar.</string>
+    <string name="pre_message_home">Where are we</string>
+    <string name="message_home">going today?</string>
+    <string name="user_avatar_description">user avatar</string>
+    <string name="place_description">place_image</string>
+    <string name="rating_description">rating</string>
+    <string name="location_description">location</string>
 </resources>
