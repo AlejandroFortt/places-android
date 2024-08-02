@@ -6,6 +6,10 @@ import com.fortatic.apps.places.data.database.toDomainModel
 import com.fortatic.apps.places.data.model.PlaceData
 import com.fortatic.apps.places.data.network.models.toDatabaseModel
 import com.fortatic.apps.places.data.network.models.toDomainModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -24,7 +28,7 @@ class PlaceDataRepository @Inject constructor(
     private var placeDataCache: PlaceData? = null
 
     // Key to prevent race conditions
-    private val loadPlaceDataLocker = Any()
+    private val mutex = Mutex()
 
     /**
      * This function only asks to download the remote data
@@ -50,7 +54,7 @@ class PlaceDataRepository @Inject constructor(
         * This ensure that only one sub process access to this code, to avoid inconsistent data
         * because of concurrency
         * */
-        synchronized(loadPlaceDataLocker) {
+        mutex.withLock {
             // Network data success
             placeDataCache = places.toDomainModel()
             updatePlaceDataInLocalStorage(places.toDatabaseModel())
@@ -58,23 +62,19 @@ class PlaceDataRepository @Inject constructor(
     }
 
     // Return place data from cache
-    fun getOfflinePlaceData() : PlaceData {
-        synchronized(loadPlaceDataLocker) {
+    suspend fun getOfflinePlaceData() = mutex.withLock {
+        withContext(Dispatchers.IO) {
             val cacheData = placeDataCache ?: obtainPlaceDataFromLocalStorage()
             placeDataCache = cacheData
-            return cacheData
+            return@withContext cacheData
         }
     }
 
-    fun hasLocalData() = placeDatabase.placeDao().getAllPlaces().isNotEmpty()
+    suspend fun hasLocalData() = placeDatabase.placeDao().getAllPlaces().isNotEmpty()
 
-    private fun obtainPlaceDataFromLocalStorage(): PlaceData {
-        return placeDatabase.placeDao().getAllPlaces().toDomainModel()
-    }
+    private suspend fun obtainPlaceDataFromLocalStorage() =
+        placeDatabase.placeDao().getAllPlaces().toDomainModel()
 
-    // Update the room data for searching
-    private fun updatePlaceDataInLocalStorage(places: List<PlaceEntity>) {
-        Timber.d("update local storage with ${places.size} places")
+    private suspend fun updatePlaceDataInLocalStorage(places: List<PlaceEntity>) =
         placeDatabase.placeDao().insertAll(places)
-    }
 }

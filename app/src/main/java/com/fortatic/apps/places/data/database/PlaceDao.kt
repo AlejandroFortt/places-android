@@ -12,8 +12,8 @@ import androidx.room.Query
 interface PlaceDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(placeEntities: List<PlaceEntity>)
+    suspend fun insertAll(placeEntities: List<PlaceEntity>)
 
     @Query("SELECT * FROM places")
-    fun getAllPlaces(): List<PlaceEntity>
+    suspend fun getAllPlaces(): List<PlaceEntity>
 }
