@@ -98,3 +98,7 @@ dependencies {
     // Timber
     implementation(libs.timber)
 }
+
+kapt {
+    correctErrorTypes = true
+}
