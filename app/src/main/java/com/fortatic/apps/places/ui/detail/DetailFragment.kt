@@ -17,8 +17,6 @@ import com.fortatic.apps.places.util.Result
 import com.fortatic.apps.places.util.applyIfNotNull
 import com.fortatic.apps.places.util.generateMarker
 import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.MapView
-import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.ktx.addMarker
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,98 +29,115 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(FragmentDetailBinding
 
     private val detailViewModel: DetailViewModel by viewModels()
 
-    private var mMap: MapView? = null
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        mMap?.applyIfNotNull { onCreate(savedInstanceState) }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        mMap?.applyIfNotNull { onSaveInstanceState(outState) }
-        super.onSaveInstanceState(outState)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        mMap?.applyIfNotNull { onResume() }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        mMap?.applyIfNotNull { onStart() }
-    }
-
-    override fun onStop() {
-        super.onStop()
-        mMap?.applyIfNotNull { onStop() }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        mMap?.applyIfNotNull { onPause() }
-    }
-
-    override fun onLowMemory() {
-        super.onLowMemory()
-        mMap?.applyIfNotNull { onLowMemory() }
-    }
-
     override fun onViewCreated() {
-
-        mMap = binding.mapView
-
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                detailViewModel.placeData.collectLatest {
-                    when(it) {
-                        is Result.Error -> {
-                            Toast.makeText(
-                                context,
-                                getString(R.string.error_loading_place),
-                                Toast.LENGTH_LONG
-                            ).show()
-                            Timber.e(it.exception)
-                            findNavController().popBackStack()
+                launch {
+                    detailViewModel.placeData.collectLatest { result ->
+                        when(result) {
+                            is Result.Error -> handleLoadingError(result.exception)
+                            is Result.Loading -> {}
+                            is Result.Success -> handleSuccess(result.data)
                         }
-                        is Result.Loading -> {
-                            //use shimmer effect
+                    }
+                }
+                launch {
+                    detailViewModel.mapUiState.collectLatest { mapUiState ->
+                        when (mapUiState) {
+                            is MapUiState.UpdateMarker -> updateMap(mapUiState)
+                            else -> {}
                         }
-
-                        is Result.Success -> setUiWithData(it.data)
                     }
                 }
             }
         }
     }
 
+    private fun handleLoadingError(exception: Exception) {
+        Toast.makeText(
+            context,
+            getString(R.string.error_loading_place),
+            Toast.LENGTH_LONG
+        ).show()
+        Timber.e(exception)
+        findNavController().popBackStack()
+    }
+
+    private fun handleSuccess(data: Place) {
+        setUiWithData(data)
+        detailViewModel.setMapData(data)
+    }
+
     private fun setUiWithData(data: Place) {
-        Timber.d("Place data: $data")
         binding.tvName.text = data.name
         binding.tvCountry.text = data.country
         binding.tvRate.text = data.rate
         binding.tvPrice.text = data.price
         binding.tvDescription.text = data.description
         binding.placeImage.load(data.imageUrl)
-
-        val (latitude, longitude) = data.coordinates.split(",")
-        val iconMap = requireContext().generateMarker(data.name)
-        setMapView(latitude, longitude, iconMap)
     }
 
-    private fun setMapView(latitude: String, longitude: String, iconMap: BitmapDescriptor) {
-        val position = LatLng(latitude.toDouble(), longitude.toDouble())
-        binding.mapView.getMapAsync {
-            it.addMarker {
+    private fun updateMap(mapUiState: MapUiState.UpdateMarker) {
+        val position = LatLng(mapUiState.latitude.toDouble(), mapUiState.longitude.toDouble())
+        val iconMap = requireContext().generateMarker(mapUiState.name)
+        binding.mapView.getMapAsync { googleMap ->
+            googleMap.addMarker {
                 position(position)
                 icon(iconMap)
             }
-            it.moveCamera(
+            googleMap.moveCamera(
                 CameraUpdateFactory.newLatLngZoom(
                     position,
                     resources.getDimension(R.dimen.zoom_dimension)
                 )
             )
+            googleMap.setOnMapClickListener {
+                navigateToMapFragment(mapUiState.latitude, mapUiState.longitude, mapUiState.name)
+            }
         }
+    }
+
+    private fun navigateToMapFragment(latitude: String, longitude: String, name: String) {
+        val action = DetailFragmentDirections.actionDetailFragmentToMapFragment(
+            latValue = latitude,
+            lonValue = longitude,
+            placeName = name
+        )
+        findNavController().navigate(action)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.mapView.applyIfNotNull { onCreate(savedInstanceState) }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        binding.mapView.applyIfNotNull { onSaveInstanceState(outState) }
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.mapView.applyIfNotNull { onResume() }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        binding.mapView.applyIfNotNull { onStart() }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        binding.mapView.applyIfNotNull { onStop() }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        binding.mapView.applyIfNotNull { onPause() }
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        binding.mapView.applyIfNotNull { onLowMemory() }
     }
 }

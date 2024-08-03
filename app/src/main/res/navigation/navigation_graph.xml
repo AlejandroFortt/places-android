@@ -30,5 +30,15 @@
         android:id="@+id/mapFragment"
         android:name="com.fortatic.apps.places.ui.map.MapFragment"
         android:label="fragment_map"
-        tools:layout="@layout/fragment_map" />
+        tools:layout="@layout/fragment_map">
+        <argument
+            android:name="lat_value"
+            app:argType="string" />
+        <argument
+            android:name="lon_value"
+            app:argType="string" />
+        <argument
+            android:name="place_name"
+            app:argType="string" />
+    </fragment>
 </navigation>
