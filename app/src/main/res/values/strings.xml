@@ -9,4 +9,8 @@
     <string name="place_description">place_image</string>
     <string name="rating_description">rating</string>
     <string name="location_description">location</string>
+    <string name="error_loading_place">Ha habido un error al cargar los datos del lugar</string>
+    <string name="currency">S/</string>
+    <string name="social_description">social bar</string>
+    <string name="per_person">/por persona</string>
 </resources>

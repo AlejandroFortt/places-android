@@ -23,7 +23,8 @@ data class PlaceNetwork(
     val city: String,
     val temperature: String,
     val weather: String,
-    val activities: List<String>
+    val activities: List<String>,
+    val price: String
 )
 
 fun PlaceDataNetwork.toDatabaseModel(): List<PlaceEntity> {
@@ -39,7 +40,8 @@ fun PlaceDataNetwork.toDatabaseModel(): List<PlaceEntity> {
             city = it.city,
             temperature = it.temperature,
             weather = it.weather,
-            activities = it.activities.joinToString()
+            activities = it.activities.joinToString(),
+            price = it.price
         )
     }
 }
@@ -60,6 +62,7 @@ fun PlaceNetwork.toPlace(): Place {
         city = city,
         temperature = temperature,
         weather = weather,
-        activities = activities
+        activities = activities,
+        price = price
     )
 }

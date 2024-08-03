@@ -15,7 +15,8 @@ data class Place(
     val city: String,
     val temperature: String,
     val weather: String,
-    val activities: List<String>
+    val activities: List<String>,
+    val price: String
 )
 
 fun List<Place>.toHomePlace(): List<HomePlace> {

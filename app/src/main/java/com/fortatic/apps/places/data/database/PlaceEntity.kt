@@ -18,7 +18,8 @@ data class PlaceEntity(
     @ColumnInfo(name = "city") val city: String,
     @ColumnInfo(name = "temperature") val temperature: String,
     @ColumnInfo(name = "weather") val weather: String,
-    @ColumnInfo(name = "activities") val activities: String
+    @ColumnInfo(name = "activities") val activities: String,
+    @ColumnInfo(name = "price") val price: String
 )
 
 fun List<PlaceEntity>.toDomainModel(): PlaceData {
@@ -37,6 +38,7 @@ fun PlaceEntity.toPlace(): Place {
         city = city,
         temperature = temperature,
         weather = weather,
-        activities = activities.split(",")
+        activities = activities.split(","),
+        price = price
     )
 }
