@@ -2,4 +2,5 @@
 <resources>
     <dimen name="corner_radius_large">32dp</dimen>
     <dimen name="corner_radius_xlarge">48dp</dimen>
+    <dimen name="zoom_dimension">5dp</dimen>
 </resources>

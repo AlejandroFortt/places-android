@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -21,6 +23,13 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // Load credentials.
+        val properties = Properties()
+        file("../secrets.properties").inputStream().use { properties.load(it) }
+
+        // Share the key with your `AndroidManifest.xml`
+        manifestPlaceholders["MAPS_API_KEY"] = properties.getProperty("MAPS_API_KEY") ?: ""
     }
 
     buildTypes {
@@ -94,6 +103,10 @@ dependencies {
     implementation(libs.androidx.core.splashscreen)
 
     implementation(libs.lottie)
+
+    // Maps SDK for Android
+    implementation(libs.play.services.maps)
+    implementation(libs.maps.ktx)
 
     // Timber
     implementation(libs.timber)

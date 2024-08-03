@@ -15,9 +15,11 @@ kotlinxSerialization = "1.7.1"
 ksp = "2.0.0-1.0.24"
 lifecycleKtx = "2.8.4"
 lottie = "6.4.1"
+mapsKtx = "3.4.0"
 material = "1.12.0"
 navigation = "2.7.7"
 okhttp3Bom = "4.12.0"
+playServicesMaps = "19.0.0"
 retrofit2Bom = "2.11.0"
 room = "2.6.1"
 splashScreen = "1.0.1"
@@ -54,12 +56,14 @@ kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-c
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
 
 lottie = { module = "com.airbnb.android:lottie", version.ref = "lottie" }
+maps-ktx = { module = "com.google.maps.android:maps-ktx", version.ref = "mapsKtx" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 okhttp3-bom = { group = "com.squareup.okhttp3", name = "okhttp-bom", version.ref = "okhttp3Bom" }
 okhttp3-okhttp = { group = "com.squareup.okhttp3", name = "okhttp" }
 okhttp3-loggingInterceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor" }
 
+play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "playServicesMaps" }
 retrofit2-bom = { group = "com.squareup.retrofit2", name = "retrofit-bom", version.ref = "retrofit2Bom" }
 retrofit2-core = { group = "com.squareup.retrofit2", name = "retrofit" }
 retrofit2-converter-kotlinSerialization = { group = "com.squareup.retrofit2", name = "converter-kotlinx-serialization" }
@@ -73,3 +77,4 @@ jetbrains-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serializati
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 safeargs-kotlin = { id = "androidx.navigation.safeargs.kotlin", version.ref = "navigation" }
+maps = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version = "2.0.1" }
