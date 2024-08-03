@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">places</string>
+    <string name="app_name">Lugares</string>
     <string name="retry">Reintentar</string>
     <string name="error_title">Algo ocurrió</string>
     <string name="error_message">Revisa tu conexión a internet y verifica que todo esté bien antes de continuar.</string>

@@ -1,5 +1,6 @@
 package com.fortatic.apps.places.di
 
+import com.fortatic.apps.places.BuildConfig
 import com.fortatic.apps.places.data.network.PlaceApiService
 import dagger.Module
 import dagger.Provides
@@ -10,8 +11,6 @@ import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import javax.inject.Singleton
-
-const val BASE_URL = "http://demo7573213.mockable.io"
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -28,7 +27,7 @@ object ApiModule {
                     ("application/json; charset=UTF-8").toMediaType()
                 )
             )
-            .baseUrl(BASE_URL)
+            .baseUrl(BuildConfig.BASE_URL)
             .build()
     }
 

@@ -32,9 +32,32 @@ android {
         manifestPlaceholders["MAPS_API_KEY"] = properties.getProperty("MAPS_API_KEY") ?: ""
     }
 
+    flavorDimensions.add("event")
+    productFlavors {
+        create("cyberMonday") {
+            dimension = "event"
+            versionNameSuffix = "-CB"
+        }
+        create("blackFriday") {
+            dimension = "event"
+            versionNameSuffix = "-BF"
+        }
+    }
+
     buildTypes {
-        release {
+        debug {
             isMinifyEnabled = false
+            applicationIdSuffix = ".debug"
+            buildConfigField("String", "BASE_URL", "\"http://demo7573213.mockable.io\"")
+        }
+        create("qa") {
+            initWith(getByName("debug"))
+            applicationIdSuffix = ".qa"
+            buildConfigField("String", "BASE_URL", "\"http://demo7573213.mockable.io\"")
+        }
+        release {
+            buildConfigField("String", "BASE_URL", "\"http://demo-prd.mockable.io\"")
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -50,6 +73,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 
