@@ -8,7 +8,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import coil.load
+import com.bumptech.glide.Glide
 import com.fortatic.apps.places.R
 import com.fortatic.apps.places.data.model.Place
 import com.fortatic.apps.places.databinding.FragmentDetailBinding
@@ -74,7 +74,9 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>(FragmentDetailBinding
         binding.tvRate.text = data.rate
         binding.tvPrice.text = data.price
         binding.tvDescription.text = data.description
-        binding.placeImage.load(data.imageUrl)
+        Glide.with(requireContext())
+            .load(data.imageUrl)
+            .into(binding.placeImage)
     }
 
     private fun updateMap(mapUiState: MapUiState.UpdateMarker) {

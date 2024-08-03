@@ -28,7 +28,7 @@ android {
         val properties = Properties()
         file("../secrets.properties").inputStream().use { properties.load(it) }
 
-        // Share the key with your `AndroidManifest.xml`
+        // Share the key with `AndroidManifest.xml` for all flavors and build types.
         manifestPlaceholders["MAPS_API_KEY"] = properties.getProperty("MAPS_API_KEY") ?: ""
     }
 
@@ -109,7 +109,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
 
     // Coil
-    implementation(libs.coil)
+    implementation(libs.glide)
 
     // Retrofit
     implementation(platform(libs.retrofit2.bom))

@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
+import com.bumptech.glide.Glide
 import com.fortatic.apps.places.data.model.HomePlace
 import com.fortatic.apps.places.databinding.ItemPlacesBinding
 
@@ -23,7 +23,9 @@ class HomePlaceAdapter(
         private val onItemClick: (String) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(place: HomePlace) {
-            binding.placeImage.load(place.imageUrl)
+            Glide.with(binding.root.context)
+                .load(place.imageUrl)
+                .into(binding.placeImage)
             binding.placeName.text = place.name.plus(", ")
             binding.placeCity.text = place.city
             binding.tvRate.text = place.rate
